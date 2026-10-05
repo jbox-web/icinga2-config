@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Deliberately bare: loading a `.env`, pinning a BUNDLE_GEMFILE or choosing a
+# Ruby belong to whoever consumes this gem, not to the gem itself.
+
+require 'icinga2/config'
+require 'icinga2/config/cli'
+
+Icinga2::Config::CLI.start(ARGV)

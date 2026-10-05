@@ -1,0 +1,24 @@
+# Ignore bundler config.
+.bundle/
+
+# Ignore Gemfile.lock
+Gemfile.lock
+gemfiles/*.lock
+
+# Ignore test files
+coverage/
+
+# Ignore dummy app files
+/spec/reports/
+
+# Ignore MacOS files
+.DS_Store
+
+# Ignore codegraph db
+/.codegraph
+
+# Ignore built gems
+/pkg/
+
+# Ignore claude dir
+.claude

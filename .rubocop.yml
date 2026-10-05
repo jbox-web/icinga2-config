@@ -1,0 +1,68 @@
+---
+plugins:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  # Matches required_ruby_version in the gemspec: the gem supports 3.2, even
+  # though development happens on the version mise.toml pins.
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  # Merge our exclusions with RuboCop's defaults instead of replacing them, so a
+  # vendored bundle (the CI bundler-cache) is never inspected.
+  inherit_mode:
+    merge:
+      - Exclude
+  Exclude:
+    - 'bin/*'
+    - 'vendor/**/*'
+    - 'snapshots/**/*'
+
+# The CLI prints user-facing help and diff output; long heredocs and format
+# strings are the point, not a smell.
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/AbcSize:
+  Max: 25
+
+# Four Thor commands, their exit-code handling and the helpers that render them.
+# Splitting it would move the exit-code contract away from the commands it
+# belongs to, which is the one thing that must stay readable in one place.
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Layout/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false
+
+
+# The specs feed real Icinga attribute hashes, which do not fit in five lines,
+# and a membership example legitimately asserts on both sides of a comparison.
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/MultipleExpectations:
+  Max: 3
+
+# The CLI state specs need the client, its hosts collection, the host itself and
+# an attribute hash, on top of the captured streams.
+RSpec/MultipleMemoizedHelpers:
+  Max: 6
+
+# Console decides whether to colour by asking `$stdout.tty?`, so its specs — and
+# the Reporter's, which render through it — have to swap `$stdout` for an object
+# whose `tty?` they control. The `output(...).to_stdout` matcher the cop suggests
+# installs its own StringIO and leaves no way to do that.
+RSpec/ExpectOutput:
+  Exclude:
+    - 'spec/icinga2/config/console_spec.rb'
+    - 'spec/icinga2/config/reporter_spec.rb'
+    - 'spec/icinga2/config/spinner_spec.rb'
